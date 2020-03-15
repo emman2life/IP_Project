@@ -5,6 +5,7 @@ import jdk.dynalink.beans.StaticClass;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.sql.*;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -14,6 +15,17 @@ import java.util.Scanner;
 
 public class TodoHandler {
     static final private String FILENAME = "TodoList.txt";
+    private static Connection connect() {
+        // SQLite connection string
+        String url = "jdbc:sqlite:sqlite/TodoList.db";
+        Connection conn = null;
+        try {
+            conn = DriverManager.getConnection(url);
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return conn;
+    }
 
     public static String addTodoToFile(String todo)
     {
@@ -53,8 +65,10 @@ public class TodoHandler {
             } catch (ParseException e) {
                 e.printStackTrace();
             }
-            Todo todo = new Todo(strTitle,strDescription, date);
-            if(status.equals("Completed"))todo.setDone(true);
+            boolean done = false;
+            if(status.equals("Completed"))done=true;
+            Todo todo = new Todo(strTitle,strDescription, date, done);
+
             todoList.add(todo);
         }
 
@@ -79,5 +93,128 @@ public class TodoHandler {
         }
         return stringArrayList;
 
+    }
+
+    public static void updateTodo(Todo todo) {
+
+    }
+    public static ArrayList<Todo> selectAllTask(){
+        ArrayList<Todo> todoList = new ArrayList<Todo>();
+
+
+
+        String sql = "SELECT * FROM todos";
+
+        try {
+            Connection conn = connect();
+            Statement stmt  = conn.createStatement();
+            ResultSet rs    = stmt.executeQuery(sql);
+
+            // loop through the result set
+            while (rs.next()) {
+                boolean isDone = false;
+                int done = rs.getInt("isDone");
+                if(done == 1)isDone=true;
+
+
+                SimpleDateFormat fDate = new SimpleDateFormat("y-M-d");
+                Date date = new Date();
+
+                try {
+                    date = fDate.parse(rs.getString("date"));
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+
+                Todo todo = new Todo(rs.getString("title"),rs.getString("description"), date, isDone);
+                todoList.add(todo);
+                //System.out.println(rs.getInt("id") +  "\t" );
+
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return todoList;
+    }
+
+
+    public static ArrayList<Todo> selectAllTaskByDate(){
+        ArrayList<Todo> todoList = new ArrayList<Todo>();
+
+
+
+        String sql = "SELECT * FROM todos ORDER BY date";
+
+        try {
+            Connection conn = connect();
+            Statement stmt  = conn.createStatement();
+            ResultSet rs    = stmt.executeQuery(sql);
+
+            // loop through the result set
+            while (rs.next()) {
+                boolean isDone = false;
+                int done = rs.getInt("isDone");
+                if(done == 1)isDone=true;
+
+
+                SimpleDateFormat fDate = new SimpleDateFormat("y-M-d");
+                Date date = new Date();
+
+                try {
+                    date = fDate.parse(rs.getString("date"));
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+
+                Todo todo = new Todo(rs.getString("title"),rs.getString("description"), date, isDone);
+                todoList.add(todo);
+                //System.out.println(rs.getInt("id") +  "\t" );
+
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return todoList;
+    }
+    public static String insert(String title, String des, String date, int isDone) {
+        String sql = "INSERT INTO todos(title, description, date, isDone) VALUES(?,?,?,?)";
+        String msg = "";
+        try{
+            Connection conn = connect();
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, title);
+            pstmt.setString(2, des);
+            pstmt.setString(3, date);
+            pstmt.setInt(4, isDone);
+            pstmt.executeUpdate();
+            msg = "Inserted into the database successfully";
+        } catch (SQLException e) {
+            msg=e.getMessage();
+        }
+        return msg;
+    }
+    public static String update(String title, String des, String date, int done,  int id) {
+        String msg = "";
+
+        String sql = "UPDATE todos SET title=?,"
+                + "description = ?,"
+                + "date = ?,"
+                + "isDone = ?"
+                + "WHERE id = ?";
+
+
+        try{
+            Connection conn = connect();
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, title);
+            pstmt.setString(2, des);
+            pstmt.setString(3, date);
+            pstmt.setInt(4, done);
+            pstmt.setInt(5, id);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            msg=e.getMessage();
+        }
+        return msg;
     }
 }

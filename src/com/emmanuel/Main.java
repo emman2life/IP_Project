@@ -4,13 +4,31 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import static com.emmanuel.Create.createNewDatabase;
+import static com.emmanuel.CreateTable.createNewTable;
+import static com.emmanuel.SqlitConnect.connect;
+
 public class Main {
 
     public static void main(String[] args) {
-      displayMenu();
+        //connect();
+        //createNewDatabase("TodoList.db");
+        //createNewTable();
+        //InsertRecord app = new InsertRecord();
+// insert three new rows
+        //app.insert("Call Amar", "Call Amar to tell him about ", "2020-3-18",0);
+       //app.insert("Help Patrick", "With the program ", "2020-3-16",0);
+        //app.insert("Write C# program", "Identifying the most frequent used word in a text ", "2020-3-16",0);
+       //SelectRecords app = new SelectRecords();
+        //selectAll();
+
+
+        displayMenu();
 
 
     }
+
+
 
     public static void addNewTask() {
         String pattern = "YYYY-dd-MM";
@@ -25,6 +43,7 @@ public class Main {
         String dateStr = in.nextLine();
         Date date = new Date();
         SimpleDateFormat format = new SimpleDateFormat("y-M-d");
+        boolean done = false;
 
 
 
@@ -34,17 +53,44 @@ public class Main {
             e.printStackTrace();
         }
 
-        Todo todo = new Todo(title, description, date);
-        String msg = TodoHandler.addTodoToFile(todo.writeToFile());
+        String msg = TodoHandler.insert(title, description, dateStr, 0);
+
+        System.out.println(msg);
+    }
+    public static void editTask() {
+        String pattern = "YYYY-dd-MM";
+        Scanner in = new Scanner(System.in);
+        System.out.println("Enter title");
+        String title = in.nextLine();
+
+        System.out.println("Enter task description");
+        String description = in.nextLine();
+
+        System.out.println("Enter date in this format yyyy-MM-DD");
+        String dateStr = in.nextLine();
+        Date date = new Date();
+        SimpleDateFormat format = new SimpleDateFormat("y-M-d");
+        boolean done = false;
+
+
+
+        try {
+            date = format.parse(dateStr);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        String msg = TodoHandler.update(title, description, dateStr, 0, 2);
+
         System.out.println(msg);
     }
 
     public static void displayMenu() {
-        ArrayList<String> allTask = TodoHandler.readFromFile();
-        int totaltasks = allTask.size();
+        ArrayList<Todo> allTask = TodoHandler.selectAllTask();
+        int totalTasks = allTask.size();
         Scanner in = new Scanner(System.in);
         System.out.println(">> Welcome to ToDoLy\n" +
-                ">> You have "+totaltasks+ " tasks todo and Y tasks are done!\n" +
+                ">> You have "+totalTasks+ " tasks todo and Y tasks are done!\n" +
                 ">> Pick an option:\n" +
                 ">> (1) Show Task List (by date or project)\n" +
                 ">> (2) Add New Task\n" +
@@ -57,7 +103,7 @@ public class Main {
 
         switch (opt) {
             case 1:
-                ArrayList<Todo> todoList = TodoHandler.getTodoList();
+                ArrayList<Todo> todoList = TodoHandler.selectAllTaskByDate();
                 for(int i=0;i<todoList.size();i++)
                 {
                     Todo todo = todoList.get(i);
@@ -71,6 +117,7 @@ public class Main {
                 displayMenu();
                 break;
             case 3:
+                editTask();
                 break;
             case 4:
                 System.exit(0);

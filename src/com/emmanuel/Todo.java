@@ -2,18 +2,19 @@ package com.emmanuel;
 import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
-public class Todo {
+public class Todo{
     private String title;
     private String todoDescription;
     private Date dateCreated;
     private Date taskDate;
     private Boolean isDone;
+    //private int id;
 
-    public Todo(String title, String todoDescription, Date taskDate) {
+    public Todo(String title, String todoDescription, Date taskDate, boolean isDone) {
         this.title = title;
         this.todoDescription = todoDescription;
         this.dateCreated = Calendar.getInstance().getTime();
-        this.isDone = false;
+        this.isDone = isDone;
         this.taskDate = taskDate;
     }
 
@@ -51,9 +52,7 @@ public class Todo {
         if(isDone)
             status = "Completed";
 
-        String pattern = "y-M-d";
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
-        String date = simpleDateFormat.format(taskDate);
+        String date = dateToString();
 
         String str = title+" "+date+" "+status;
         return str;
@@ -62,14 +61,20 @@ public class Todo {
         String status = "Pending";
         if(isDone)
             status = "Completed";
+        String date = dateToString();
 
-        String pattern = "y-M-d";
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
-        String date = simpleDateFormat.format(taskDate);
 
         String str = title+":"+todoDescription+":"+date+":"+status;
         return str;
     }
+    public String dateToString(){
+
+        String pattern = "y-M-d";
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+        String date = simpleDateFormat.format(taskDate);
+return date;
+    }
+
 
 
 }
