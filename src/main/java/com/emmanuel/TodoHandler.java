@@ -1,6 +1,6 @@
 package com.emmanuel;
 
-import jdk.dynalink.beans.StaticClass;
+//import jdk.dynalink.beans.StaticClass;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -98,12 +98,36 @@ public class TodoHandler {
     public static void updateTodo(Todo todo) {
 
     }
-    public static ArrayList<Todo> selectAllTask(){
+    public static int completedTask(){
+
+int count=0;
+
+
+        String sql = "SELECT * FROM todos ORDER BY title";
+
+        try {
+            Connection conn = connect();
+            Statement stmt  = conn.createStatement();
+            ResultSet rs    = stmt.executeQuery(sql);
+
+            // loop through the result set
+            while (rs.next()) {
+
+                int done = rs.getInt("isDone");
+                count += done==1?1:0;
+
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return count;
+    }
+    public static ArrayList<Todo> selectAllTaskByProject(){
         ArrayList<Todo> todoList = new ArrayList<Todo>();
 
 
 
-        String sql = "SELECT * FROM todos";
+        String sql = "SELECT * FROM todos ORDER BY title";
 
         try {
             Connection conn = connect();
@@ -127,6 +151,7 @@ public class TodoHandler {
                 }
 
                 Todo todo = new Todo(rs.getString("title"),rs.getString("description"), date, isDone);
+                todo.setId(rs.getInt("id"));
                 todoList.add(todo);
                 //System.out.println(rs.getInt("id") +  "\t" );
 
@@ -167,6 +192,7 @@ public class TodoHandler {
                 }
 
                 Todo todo = new Todo(rs.getString("title"),rs.getString("description"), date, isDone);
+                todo.setId(rs.getInt("id"));
                 todoList.add(todo);
                 //System.out.println(rs.getInt("id") +  "\t" );
 

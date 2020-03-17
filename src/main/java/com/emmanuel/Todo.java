@@ -8,7 +8,7 @@ public class Todo{
     private Date dateCreated;
     private Date taskDate;
     private Boolean isDone;
-    //private int id;
+    private int id;
 
     public Todo(String title, String todoDescription, Date taskDate, boolean isDone) {
         this.title = title;
@@ -76,5 +76,11 @@ return date;
     }
 
 
+    public int getId() {
+        return id;
+    }
 
+    public void setId(int id) {
+        this.id = id;
+    }
 }
