@@ -15,13 +15,6 @@ public class Main {
         //createNewDatabase("TodoList.db");
         //createNewTable();
         //InsertRecord app = new InsertRecord();
-// insert three new rows
-        //app.insert("Call Amar", "Call Amar to tell him about ", "2020-3-18",0);
-       //app.insert("Help Patrick", "With the program ", "2020-3-16",0);
-        //app.insert("Write C# program", "Identifying the most frequent used word in a text ", "2020-3-16",0);
-       //SelectRecords app = new SelectRecords();
-        //selectAll();
-
 
         displayMenu();
 

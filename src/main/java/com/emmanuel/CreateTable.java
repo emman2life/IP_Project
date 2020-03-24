@@ -6,6 +6,10 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public class CreateTable {
+    /**
+     * this method will create a table on the database TodoList.db already created
+     * this is run once method and should be called only if the is no existing table or new table
+     */
     public static void createNewTable() {
         // SQLite connection string
         String url = "jdbc:sqlite:sqlite/TodoList.db";
@@ -24,6 +28,7 @@ public class CreateTable {
             Statement stmt = conn.createStatement();
             stmt.execute(sql);
         } catch (SQLException e) {
+            // display message if there was something wrong when create table
             System.out.println(e.getMessage());
         }
     }

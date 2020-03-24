@@ -14,7 +14,11 @@ import java.util.Date;
 import java.util.Scanner;
 
 public class TodoHandler {
-    static final private String FILENAME = "TodoList.txt";
+
+    /**
+     * Get the connection to the database
+     * @return
+     */
     private static Connection connect() {
         // SQLite connection string
         String url = "jdbc:sqlite:sqlite/TodoList.db";
@@ -22,123 +26,69 @@ public class TodoHandler {
         try {
             conn = DriverManager.getConnection(url);
         } catch (SQLException e) {
+            //Message if the database is not able to connected
             System.out.println(e.getMessage());
         }
         return conn;
     }
 
-    public static String addTodoToFile(String todo)
-    {
-        String strMsg = "";
+    /**
+     * The todo status isDone  is save as int  0 and 1 in the database
+     * this method count how many 1 is in in isDone column  and return the value
+     * @return
+     */
+    public static int completedTask() {
 
+        int count = 0;
 
-        try(FileWriter fw = new FileWriter(FILENAME, true);
-            BufferedWriter bw = new BufferedWriter(fw);
-            PrintWriter out = new PrintWriter(bw))
-        {
-            out.println(todo);
-            strMsg = "New task add successfully";
-        } catch (IOException e) {
-            strMsg = "Unable to add task";
-        }
-
-        return strMsg;
-    }
-
-
-    public static ArrayList<Todo> getTodoList(){
-        ArrayList<String> stringArrayList = readFromFile();
-        ArrayList<Todo> todoList = new ArrayList<Todo>();
-        for (String str: stringArrayList){
-            String[] strArr = str.split(":");
-            String strTitle = strArr[0];
-            String strDescription = strArr[1];
-            String strDate = strArr[2];
-            String status = strArr[3];
-
-
-            SimpleDateFormat fDate = new SimpleDateFormat("y-M-d");
-           Date date = new Date();
-
-            try {
-                date = fDate.parse(strDate);
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-            boolean done = false;
-            if(status.equals("Completed"))done=true;
-            Todo todo = new Todo(strTitle,strDescription, date, done);
-
-            todoList.add(todo);
-        }
-
-        return todoList;
-    }
-
-    public static ArrayList<String> readFromFile(){
-        ArrayList<String> stringArrayList = new ArrayList<String>();
-        try {
-            File myObj = new File(FILENAME);
-            Scanner myReader = new Scanner(myObj);
-            while (myReader.hasNextLine()) {
-                String line = myReader.nextLine();
-                if(line.equals(""))continue;
-               stringArrayList.add(line);
-
-            }
-            myReader.close();
-        } catch (FileNotFoundException e) {
-            System.out.println("An error occurred.");
-            e.printStackTrace();
-        }
-        return stringArrayList;
-
-    }
-
-    public static void updateTodo(Todo todo) {
-
-    }
-    public static int completedTask(){
-
-int count=0;
-
-
+        // sql query to select todos table
         String sql = "SELECT * FROM todos ORDER BY title";
 
         try {
             Connection conn = connect();
-            Statement stmt  = conn.createStatement();
-            ResultSet rs    = stmt.executeQuery(sql);
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
 
             // loop through the result set
             while (rs.next()) {
-
+            //get isDone int value from database and store it in a variable
                 int done = rs.getInt("isDone");
-                count += done==1?1:0;
+                //add done variable value to count 0 or 1
+
+                count += done == 1 ? 1 : 0;
 
             }
         } catch (SQLException e) {
+            // Failed message if not able to connect
             System.out.println(e.getMessage());
         }
         return count;
     }
-    public static ArrayList<Todo> selectAllTaskByProject(){
+
+    /**
+     * this method help query database and take sql query as input and return list of todos if successful
+     * @param sqlQuery sql query
+     * @return
+     */
+    private  static ArrayList<Todo> selectWithSqlQuery(String sqlQuery){
+        // variable that will be returned
         ArrayList<Todo> todoList = new ArrayList<Todo>();
 
+        // sql query to select todos table
 
 
-        String sql = "SELECT * FROM todos ORDER BY title";
 
         try {
             Connection conn = connect();
-            Statement stmt  = conn.createStatement();
-            ResultSet rs    = stmt.executeQuery(sql);
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(sqlQuery);
 
             // loop through the result set
             while (rs.next()) {
                 boolean isDone = false;
+                //get isDone int value from database and store it in a variable
                 int done = rs.getInt("isDone");
-                if(done == 1)isDone=true;
+                if (done == 1) isDone = true;
 
 
                 SimpleDateFormat fDate = new SimpleDateFormat("y-M-d");
@@ -150,7 +100,7 @@ int count=0;
                     e.printStackTrace();
                 }
 
-                Todo todo = new Todo(rs.getString("title"),rs.getString("description"), date, isDone);
+                Todo todo = new Todo(rs.getString("title"), rs.getString("description"), date, isDone);
                 todo.setId(rs.getInt("id"));
                 todoList.add(todo);
                 //System.out.println(rs.getInt("id") +  "\t" );
@@ -162,50 +112,46 @@ int count=0;
         return todoList;
     }
 
+    /**
+     * This call a method to query database and return todos by project name
+     * @return
+     */
+    public static ArrayList<Todo> selectAllTaskByProject() {
 
-    public static ArrayList<Todo> selectAllTaskByDate(){
-        ArrayList<Todo> todoList = new ArrayList<Todo>();
 
+        // sql query to select todos table
+
+        String sql = "SELECT * FROM todos ORDER BY title";
+        ArrayList<Todo> todoList = selectWithSqlQuery(sql);
+        return todoList;
+    }
+
+    /**
+     * This call a method to query database and return todos by project name
+     * @return
+     */
+    public static ArrayList<Todo> selectAllTaskByDate() {
 
 
         String sql = "SELECT * FROM todos ORDER BY date";
 
-        try {
-            Connection conn = connect();
-            Statement stmt  = conn.createStatement();
-            ResultSet rs    = stmt.executeQuery(sql);
-
-            // loop through the result set
-            while (rs.next()) {
-                boolean isDone = false;
-                int done = rs.getInt("isDone");
-                if(done == 1)isDone=true;
-
-
-                SimpleDateFormat fDate = new SimpleDateFormat("y-M-d");
-                Date date = new Date();
-
-                try {
-                    date = fDate.parse(rs.getString("date"));
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-
-                Todo todo = new Todo(rs.getString("title"),rs.getString("description"), date, isDone);
-                todo.setId(rs.getInt("id"));
-                todoList.add(todo);
-                //System.out.println(rs.getInt("id") +  "\t" );
-
-            }
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-        }
+        ArrayList<Todo> todoList = selectWithSqlQuery(sql);
         return todoList;
+
     }
+
+    /**
+     * This method insert a new todo into database table with following parameter
+     * @param title
+     * @param des
+     * @param date
+     * @param isDone
+     * @return
+     */
     public static String insert(String title, String des, String date, int isDone) {
         String sql = "INSERT INTO todos(title, description, date, isDone) VALUES(?,?,?,?)";
         String msg = "";
-        try{
+        try {
             Connection conn = connect();
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, title);
@@ -215,11 +161,21 @@ int count=0;
             pstmt.executeUpdate();
             msg = "Inserted into the database successfully";
         } catch (SQLException e) {
-            msg=e.getMessage();
+            msg = e.getMessage();
         }
         return msg;
     }
-    public static String update(String title, String des, String date, int done,  int id) {
+
+    /**
+     * This method updates already existing todo record in database
+     * @param title
+     * @param des
+     * @param date
+     * @param done
+     * @param id
+     * @return
+     */
+    public static String update(String title, String des, String date, int done, int id) {
         String msg = "";
 
         String sql = "UPDATE todos SET title=?,"
@@ -229,7 +185,7 @@ int count=0;
                 + "WHERE id = ?";
 
 
-        try{
+        try {
             Connection conn = connect();
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, title);
@@ -239,7 +195,7 @@ int count=0;
             pstmt.setInt(5, id);
             pstmt.executeUpdate();
         } catch (SQLException e) {
-            msg=e.getMessage();
+            msg = e.getMessage();
         }
         return msg;
     }
