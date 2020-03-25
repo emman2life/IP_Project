@@ -1,59 +1,30 @@
 package com.emmanuel;
 
-import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class Todo {
     private String title;
-    private String todoDescription;
-    private Date dateCreated;
-    private Date taskDate;
-    private Boolean isDone;
+    private String description;
+
+    private Date dueDate;
+    private Boolean status;
     private int id;
 
     /**
      * Todo class constructor
      *
      * @param title
-     * @param todoDescription
-     * @param taskDate
-     * @param isDone
+     * @param description
+     * @param dueDate
+     * @param status
      */
-    public Todo(String title, String todoDescription, Date taskDate, boolean isDone) {
+    public Todo(String title, String description, Date dueDate, boolean status) {
         this.title = title;
-        this.todoDescription = todoDescription;
-        this.dateCreated = Calendar.getInstance().getTime();
-        this.isDone = isDone;
-        this.taskDate = taskDate;
-    }
-    //get isDone
-    public Boolean getDone() {
-        return isDone;
-    }
-    //set isDone
-    public void setDone(Boolean done) {
-        isDone = done;
-    }
-    //get todoDescription
-    public String getTodoDescription() {
-        return todoDescription;
-    }
-    //set todoDescription
-    public void setTodoDescription(String todoDescription) {
-        this.todoDescription = todoDescription;
-    }
-    //get title
-    public String getTitle() {
-        return title;
-    }
-    //set title
-    public void setTitle(String title) {
-        this.title = title;
-    }
-    //get dateCreated
-    public Date getDate() {
-        return dateCreated;
+        this.description = description;
+
+        this.status = status;
+        this.dueDate = dueDate;
     }
 
     /**
@@ -66,7 +37,7 @@ public class Todo {
         // status boolean value in the class
         //here is converted text Pending and Completed for readability
         String status = "Pending";
-        if (isDone)
+        if (this.status)
             status = "Completed";
         //this convert date object to string
         String date = dateToString();
@@ -80,11 +51,11 @@ public class Todo {
      *
      * @return
      */
-    public String dateToString() {
+    private String dateToString() {
 
         String pattern = "y-M-d";
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
-        String date = simpleDateFormat.format(taskDate);
+        String date = simpleDateFormat.format(dueDate);
         return date;
     }
 
@@ -95,5 +66,8 @@ public class Todo {
     //set id
     public void setId(int id) {
         this.id = id;
+    }
+    public void markedAsDone(Todo todo){
+
     }
 }
