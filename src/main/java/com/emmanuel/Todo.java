@@ -5,7 +5,7 @@ import java.util.*;
 
 public class Todo {
     private String title;
-    private String description;
+    private String project;
 
     private Date dueDate;
     private Boolean status;
@@ -15,13 +15,13 @@ public class Todo {
      * Todo class constructor
      *
      * @param title
-     * @param description
+     * @param project
      * @param dueDate
      * @param status
      */
-    public Todo(String title, String description, Date dueDate, boolean status) {
+    public Todo(String title, String project, Date dueDate, boolean status) {
         this.title = title;
-        this.description = description;
+        this.project = project;
 
         this.status = status;
         this.dueDate = dueDate;

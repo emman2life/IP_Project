@@ -10,3 +10,5 @@ Once they are using the application, the user should be able to also edit, mark 
 
 ## UML class diagram
 ![Alt](images/TodoUMLDiagram.png)
+
+## User manual

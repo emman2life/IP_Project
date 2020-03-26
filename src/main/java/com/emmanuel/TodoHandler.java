@@ -64,6 +64,16 @@ public class TodoHandler {
         }
         return count;
     }
+    public static ArrayList<Todo> selectTaskByDate(String date) {
+
+
+        // sql query to select todos table
+        String sql = "SELECT * FROM todos WHERE date LIKE '%"+date+"%'";
+
+
+        ArrayList<Todo> todoList = selectWithSqlQuery(sql);
+        return todoList;
+    }
 
     /**
      * this method help query database and take sql query as input and return list of todos if successful
@@ -100,7 +110,7 @@ public class TodoHandler {
                     e.printStackTrace();
                 }
 
-                Todo todo = new Todo(rs.getString("title"), rs.getString("description"), date, isDone);
+                Todo todo = new Todo(rs.getString("title"), rs.getString("project"), date, isDone);
                 todo.setId(rs.getInt("id"));
                 todoList.add(todo);
                 //System.out.println(rs.getInt("id") +  "\t" );
@@ -121,7 +131,7 @@ public class TodoHandler {
 
         // sql query to select todos table
 
-        String sql = "SELECT * FROM todos ORDER BY title";
+        String sql = "SELECT * FROM todos ORDER BY project";
         ArrayList<Todo> todoList = selectWithSqlQuery(sql);
         return todoList;
     }
@@ -143,19 +153,19 @@ public class TodoHandler {
     /**
      * This method insert a new todo into database table with following parameter
      * @param title
-     * @param des
+     * @param project
      * @param date
      * @param isDone
      * @return
      */
-    public static String insert(String title, String des, String date, int isDone) {
-        String sql = "INSERT INTO todos(title, description, date, isDone) VALUES(?,?,?,?)";
+    public static String insert(String title, String project, String date, int isDone) {
+        String sql = "INSERT INTO todos(title, project, date, isDone) VALUES(?,?,?,?)";
         String msg = "";
         try {
             Connection conn = connect();
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, title);
-            pstmt.setString(2, des);
+            pstmt.setString(2, project);
             pstmt.setString(3, date);
             pstmt.setInt(4, isDone);
             pstmt.executeUpdate();
@@ -169,17 +179,17 @@ public class TodoHandler {
     /**
      * This method updates already existing todo record in database
      * @param title
-     * @param des
+     * @param project
      * @param date
      * @param done
      * @param id
      * @return
      */
-    public static String update(String title, String des, String date, int done, int id) {
+    public static String update(String title, String project, String date, int done, int id) {
         String msg = "";
 
         String sql = "UPDATE todos SET title=?,"
-                + "description = ?,"
+                + "project = ?,"
                 + "date = ?,"
                 + "isDone = ?"
                 + "WHERE id = ?";
@@ -189,7 +199,7 @@ public class TodoHandler {
             Connection conn = connect();
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, title);
-            pstmt.setString(2, des);
+            pstmt.setString(2, project);
             pstmt.setString(3, date);
             pstmt.setInt(4, done);
             pstmt.setInt(5, id);

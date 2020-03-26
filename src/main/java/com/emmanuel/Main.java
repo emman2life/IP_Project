@@ -13,7 +13,7 @@ public class Main {
     public static void main(String[] args) {
         //connect();
         //createNewDatabase("TodoList.db");
-        //createNewTable();
+        //CreateTable.createNewTable();
         //InsertRecord app = new InsertRecord();
 
         displayMenu();
@@ -21,15 +21,13 @@ public class Main {
 
     }
 
-
-
     public static void addNewTask() {
         String pattern = "YYYY-dd-MM";
         Scanner in = new Scanner(System.in);
         System.out.println("Enter title");
         String title = in.nextLine();
 
-        System.out.println("Enter task description");
+        System.out.println("Enter Project");
         String description = in.nextLine();
 
         System.out.println("Enter date in this format yyyy-MM-DD");
@@ -63,7 +61,7 @@ public class Main {
         System.out.println("Enter title");
         String title = in.nextLine();
 
-        System.out.println("Enter task description");
+        System.out.println("Enter project");
         String description = in.nextLine();
 
         System.out.println("Enter date in this format yyyy-MM-DD");
@@ -162,7 +160,11 @@ public class Main {
         }
     }
     private static void listTaskByDate(){
-        ArrayList<Todo> todoList = TodoHandler.selectAllTaskByDate();
+        Scanner in = new Scanner(System.in);
+        System.out.println("Enter date in this format yyyy-MM-DD");
+        String dateStr = in.nextLine();
+        ArrayList<Todo> todoList = TodoHandler.selectTaskByDate(dateStr);
+
         for(int i=0;i<todoList.size();i++)
         {
             Todo todo = todoList.get(i);
