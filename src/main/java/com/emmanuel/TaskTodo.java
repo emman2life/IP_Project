@@ -3,7 +3,7 @@ package com.emmanuel;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-public class Todo {
+public class TaskTodo {
     private String title;
     private String project;
 
@@ -19,7 +19,7 @@ public class Todo {
      * @param dueDate
      * @param status
      */
-    public Todo(String title, String project, Date dueDate, boolean status) {
+    public TaskTodo(String title, String project, Date dueDate, boolean status) {
         this.title = title;
         this.project = project;
 
@@ -67,7 +67,7 @@ public class Todo {
     public void setId(int id) {
         this.id = id;
     }
-    public void markedAsDone(Todo todo){
+    public void markedAsDone(TaskTodo todo){
 
     }
 }

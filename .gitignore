@@ -1,4 +1,3 @@
-.DS_Store
 *~
 .gradle/
 src/test/
@@ -6,3 +5,9 @@ target/classes/META-INF/
 target/test-classes/
 target/.DS_Store
 target
+build.gradle
+build/
+gradle/
+gradlew
+gradlew.bat
+settings.gradle

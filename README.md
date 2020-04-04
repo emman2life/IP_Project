@@ -12,3 +12,14 @@ Once they are using the application, the user should be able to also edit, mark 
 ![Alt](images/TodoUMLDiagram.png)
 
 ## User manual
+The program text/console base application. A user is provided with choices to pick from and a corresponding number to those choices.
+#### You are provided with the follow option at program start
+> Welcome to ToDoLy
+* You have X tasks todo and Y tasks are done!
+* Pick an option:
+1) Show Task List (by date or project)
+2) Add New Task
+3) Edit Task (update, mark as done, remove)
+4) Save and Quit
+ 
+ Pick your choice a follow the instruction

@@ -4,10 +4,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-import static com.emmanuel.Create.createNewDatabase;
-import static com.emmanuel.CreateTable.createNewTable;
-import static com.emmanuel.SqlitConnect.connect;
-
 public class Main {
 
     public static void main(String[] args) {
@@ -48,16 +44,55 @@ public class Main {
 
         System.out.println(msg);
     }
+
+    /**
+     * Edit task
+     */
     public static void editTask() {
-        String pattern = "YYYY-dd-MM";
-        Scanner in = new Scanner(System.in);
+
         Scanner ind = new Scanner(System.in);
+        Scanner optIn = new Scanner(System.in);
 
         System.out.println("#########################################################");
         System.out.println("Enter the last digits of the project ID you wish to edit");
         int id = ind.nextInt();
+        System.out.println("Enter 1 to mark as complete, 2 to edit task name, project and date. 3 to remove task ");
+        int opt = optIn.nextInt();
+        switch (opt){
+            case 1:
+                complete(id);
+
+                break;
+            case 2:
+                editTaskTodo(id);
+                break;
+            case 3:
+                deleteTask(id);
+                break;
+            default:
+                System.out.println("Enter 1, 2 or 3 only");
+                editTask();
+                break;
+        }
 
 
+
+
+    }
+    private static void complete(int id){
+        System.out.println("Enter 0 if pending or 1 to complete task");
+        Scanner in = new Scanner(System.in);
+        int done = in.nextInt();
+        String msg = TodoHandler.markAsCompleted(done, id);
+
+        System.out.println(msg);
+    }
+    private static void deleteTask(int id){
+        System.out.println(TodoHandler.removeTask(id));
+    }
+    private static void editTaskTodo(int id){
+        String pattern = "YYYY-dd-MM";
+        Scanner in = new Scanner(System.in);
         System.out.println("Enter title");
         String title = in.nextLine();
 
@@ -86,7 +121,7 @@ public class Main {
     }
 
     public static void displayMenu() {
-        ArrayList<Todo> allTask = TodoHandler.selectAllTaskByProject();
+        ArrayList<TaskTodo> allTask = TodoHandler.selectAllTaskByProject();
         int totalTasks = allTask.size();
 
         int completed = TodoHandler.completedTask();
@@ -152,10 +187,10 @@ public class Main {
         }
     }
     private static void listTaskByProject(){
-        ArrayList<Todo> todoList = TodoHandler.selectAllTaskByProject();
+        ArrayList<TaskTodo> todoList = TodoHandler.selectAllTaskByProject();
         for(int i=0;i<todoList.size();i++)
         {
-            Todo todo = todoList.get(i);
+            TaskTodo todo = todoList.get(i);
             System.out.println("ID"+(todo.getId())+" "+ todo);
         }
     }
@@ -163,11 +198,11 @@ public class Main {
         Scanner in = new Scanner(System.in);
         System.out.println("Enter date in this format yyyy-MM-DD");
         String dateStr = in.nextLine();
-        ArrayList<Todo> todoList = TodoHandler.selectTaskByDate(dateStr);
+        ArrayList<TaskTodo> todoList = TodoHandler.selectTaskByDate(dateStr);
 
         for(int i=0;i<todoList.size();i++)
         {
-            Todo todo = todoList.get(i);
+            TaskTodo todo = todoList.get(i);
             System.out.println("ID"+(todo.getId())+" "+ todo);
         }
     }

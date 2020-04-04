@@ -2,16 +2,11 @@ package com.emmanuel;
 
 //import jdk.dynalink.beans.StaticClass;
 
-import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.sql.*;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Scanner;
 
 public class TodoHandler {
 
@@ -33,7 +28,7 @@ public class TodoHandler {
     }
 
     /**
-     * The todo status isDone  is save as int  0 and 1 in the database
+     * The task status isDone  is save as int  0 and 1 in the database
      * this method count how many 1 is in in isDone column  and return the value
      * @return
      */
@@ -64,14 +59,14 @@ public class TodoHandler {
         }
         return count;
     }
-    public static ArrayList<Todo> selectTaskByDate(String date) {
+    public static ArrayList<TaskTodo> selectTaskByDate(String date) {
 
 
         // sql query to select todos table
         String sql = "SELECT * FROM todos WHERE date LIKE '%"+date+"%'";
 
 
-        ArrayList<Todo> todoList = selectWithSqlQuery(sql);
+        ArrayList<TaskTodo> todoList = selectWithSqlQuery(sql);
         return todoList;
     }
 
@@ -80,9 +75,9 @@ public class TodoHandler {
      * @param sqlQuery sql query
      * @return
      */
-    private  static ArrayList<Todo> selectWithSqlQuery(String sqlQuery){
+    private  static ArrayList<TaskTodo> selectWithSqlQuery(String sqlQuery){
         // variable that will be returned
-        ArrayList<Todo> todoList = new ArrayList<Todo>();
+        ArrayList<TaskTodo> todoList = new ArrayList<TaskTodo>();
 
         // sql query to select todos table
 
@@ -110,7 +105,7 @@ public class TodoHandler {
                     e.printStackTrace();
                 }
 
-                Todo todo = new Todo(rs.getString("title"), rs.getString("project"), date, isDone);
+                TaskTodo todo = new TaskTodo(rs.getString("title"), rs.getString("project"), date, isDone);
                 todo.setId(rs.getInt("id"));
                 todoList.add(todo);
                 //System.out.println(rs.getInt("id") +  "\t" );
@@ -126,13 +121,13 @@ public class TodoHandler {
      * This call a method to query database and return todos by project name
      * @return
      */
-    public static ArrayList<Todo> selectAllTaskByProject() {
+    public static ArrayList<TaskTodo> selectAllTaskByProject() {
 
 
         // sql query to select todos table
 
         String sql = "SELECT * FROM todos ORDER BY project";
-        ArrayList<Todo> todoList = selectWithSqlQuery(sql);
+        ArrayList<TaskTodo> todoList = selectWithSqlQuery(sql);
         return todoList;
     }
 
@@ -140,12 +135,12 @@ public class TodoHandler {
      * This call a method to query database and return todos by project name
      * @return
      */
-    public static ArrayList<Todo> selectAllTaskByDate() {
+    public static ArrayList<TaskTodo> selectAllTaskByDate() {
 
 
         String sql = "SELECT * FROM todos ORDER BY date";
 
-        ArrayList<Todo> todoList = selectWithSqlQuery(sql);
+        ArrayList<TaskTodo> todoList = selectWithSqlQuery(sql);
         return todoList;
 
     }
@@ -209,4 +204,39 @@ public class TodoHandler {
         }
         return msg;
     }
+    public static String markAsCompleted(int done, int id) {
+        String msg = "";
+
+        String sql = "UPDATE todos SET isDone = ?"
+                + "WHERE id= ?";
+
+
+        try {
+            Connection conn = connect();
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, done);
+            pstmt.setInt(2, id);
+            pstmt.executeUpdate();
+            msg = "Task successfully Updated";
+        } catch (SQLException e) {
+            msg = e.getMessage();
+        }
+        return msg;
+    }
+    public static String removeTask(int id){
+        String msg="";
+        String sql = "DELETE FROM todos WHERE id = ?";
+        try {
+            Connection conn = connect();
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            // set the corresponding param
+            pstmt.setInt(1, id);
+             pstmt.executeUpdate();
+             msg = "Task successfully deleted";
+        } catch (SQLException e) {
+            msg = e.getMessage();
+        }
+        return msg;
+    }
+
 }
