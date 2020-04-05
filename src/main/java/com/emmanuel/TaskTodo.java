@@ -42,7 +42,7 @@ public class TaskTodo {
         //this convert date object to string
         String date = dateToString();
 
-        String strTask = "Project name: "+project+" Task: "+title + " " + date + " " + status;
+        String strTask = "Project name: "+project+","+" Task: "+title + " " + date + " " + status;
         return strTask;
     }
 
