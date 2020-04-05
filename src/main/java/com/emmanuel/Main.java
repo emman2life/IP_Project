@@ -195,11 +195,11 @@ public class Main {
         }
     }
     private static void listTaskByDate(){
-      //  Scanner in = new Scanner(System.in);
-        //System.out.println("Enter date in this format yyyy-MM-DD");
-       // String dateStr = in.nextLine();
-        //ArrayList<TaskTodo> todoList = TodoHandler.selectTaskByDate(dateStr);
+
+ 
         ArrayList<TaskTodo> todoList = TodoHandler.selectAllTaskByDate();
+
+
         for(int i=0;i<todoList.size();i++)
         {
             TaskTodo todo = todoList.get(i);
