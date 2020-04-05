@@ -25,4 +25,4 @@ The program text/console base application. A user is provided with choices to pi
  Pick your choice and follow the instruction
  
 ## General Comment
-I used JDBC sqlite to to store data.
+I used JDBC sqlite to store data.
