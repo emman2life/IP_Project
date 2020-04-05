@@ -16,6 +16,7 @@ public class TodoHandler {
      */
     private static Connection connect() {
         // SQLite connection string
+
         String url = "jdbc:sqlite:sqlite/TodoList.db";
         Connection conn = null;
         try {

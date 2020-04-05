@@ -17,7 +17,7 @@ public class SqlitConnect {
         Connection conn = null;
         try {
             // db parameters
-            String url = "jdbc:sqlite:sqlite/Todo.db";
+            String url = "sqlite/Todo.db";
             // create a connection to the database
             conn = DriverManager.getConnection(url);
 
