@@ -60,16 +60,7 @@ public class TodoHandler {
         }
         return count;
     }
-    public static ArrayList<TaskTodo> selectTaskByDate(String date) {
 
-
-        // sql query to select todos table
-        String sql = "SELECT * FROM todos WHERE date LIKE '%"+date+"%'";
-
-
-        ArrayList<TaskTodo> todoList = selectWithSqlQuery(sql);
-        return todoList;
-    }
 
     /**
      * this method help query database and take sql query as input and return list of todos if successful

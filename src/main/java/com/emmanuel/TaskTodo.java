@@ -67,7 +67,5 @@ public class TaskTodo {
     public void setId(int id) {
         this.id = id;
     }
-    public void markedAsDone(TaskTodo todo){
 
-    }
 }

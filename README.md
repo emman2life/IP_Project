@@ -22,4 +22,7 @@ The program text/console base application. A user is provided with choices to pi
 3) Edit Task (update, mark as done, remove)
 4) Save and Quit
  
- Pick your choice a follow the instruction
+ Pick your choice and follow the instruction
+ 
+## General Comment
+I used JDBC sqlite to to store data.
